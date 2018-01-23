@@ -2,26 +2,23 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import logo from './logo.svg';
 import './App.css';
+import {bindActionCreators} from 'redux';
+import { fetchJedi, newJedi } from './actions/action';
 
-import { fetchJedi } from './action';
-
-function mapStateToProps(state) {
-  return {
-    jedi: state.jedi,
-  };
-}
+// function mapStateToProps(state) {
+//   return {
+//     jedi: state.jedi,
+//   };
+// }
 
 class App extends Component {
-  componentWillMount() {
-    this.fetchJedi();
-  }
-
-  fetchJedi() {
-    this.props.dispatch(fetchJedi());
+  componentDidMount() {
+    this.props.fetchJedi();
   }
 
   render() {
-    const { jedi } = this.props;
+    console.log(this.props);
+
 
     return (
       <div className="App">
@@ -29,11 +26,8 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        {jedi.map((jedi, index) => (
-          <div key={index}>
-            Jedi: id: {jedi.id} name: {jedi.name}
-          </div>
-        ))}
+        {this.props.jedi.map((jedi, index) => <div key={index}>Jedi: id: {jedi.id} name: {jedi.name}</div>)}
+        <button onClick={() => this.props.newJedi('Palawan Floles')}> Ajouter un jedi</button>
       </div>
     );
   }
@@ -43,6 +37,4 @@ App.propTypes = {
   jedi: PropTypes.array,
 };
 
-export default connect(
-  mapStateToProps,
-)(App);
+export default connect(state => state, dispatch => bindActionCreators({fetchJedi, newJedi}, dispatch))(App);
